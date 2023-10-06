@@ -13,6 +13,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> throwIDNotFoundException(IDNotFoundException exception){
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
+//    @ExceptionHandler(Exception.class)
+//    public String generalException(Exception e){
+//        return e.getMessage();
+//    }
 //    @ExceptionHandler(ProductNotFoundException.class)
 //    public ResponseEntity<String> throwProductNotFoundException(ProductNotFoundException exception){
 //        return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_ACCEPTABLE);

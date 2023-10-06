@@ -3,15 +3,12 @@ package com.ganesh.productservice.services;
 import com.ganesh.productservice.DTO.PriceDTO;
 import com.ganesh.productservice.DTO.Product;
 import com.ganesh.productservice.DTO.ProductDTO;
-import com.ganesh.productservice.DTO.ProductList;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
-@Service("testProductService")
-public class TestProductService implements ProductService{
+@Service("selfProductService")
+public class SelfProductService implements ProductService{
     @Override
     public ResponseEntity<Product> getProductById(Long id) {
         Product product=new Product();
@@ -42,6 +39,11 @@ public class TestProductService implements ProductService{
 
     @Override
     public /*ResponseEntity<ProductList>*/ ResponseEntity<Product[]> getProducts() {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<Product[]> getProductsByCategory(String category) {
         return null;
     }
 }

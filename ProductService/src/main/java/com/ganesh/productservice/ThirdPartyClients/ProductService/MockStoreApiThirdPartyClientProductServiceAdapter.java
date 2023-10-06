@@ -38,4 +38,9 @@ public class MockStoreApiThirdPartyClientProductServiceAdapter implements ThirdP
         return null;
     }
 
+    @Override
+    public ResponseEntity<Product[]> getProductsByCategory(String category) {
+        return null;
+    }
+
 }

@@ -19,4 +19,6 @@ public interface ProductService {
     ResponseEntity<Product> deleteProductById(Long id) throws IDNotFoundException;
 
     /*ResponseEntity<ProductList>*/ ResponseEntity<Product[]> getProducts();
+
+    ResponseEntity<Product[]> getProductsByCategory(String category);
 }

@@ -13,4 +13,5 @@ public interface ThirdPartyClientProductServiceAdapter {
     public ResponseEntity<Product> deleteProductById(Long id);
     public ResponseEntity<Product[]> getProducts();
     ResponseEntity<Product> getProductById(Long id);
+    ResponseEntity<Product[]> getProductsByCategory(String category);
 }

@@ -71,4 +71,9 @@ public class FakeStoreApiProductServiceClient{
         System.out.println("Ending service getProducts method");
         return listResponseEntity;
     }
+
+    public ResponseEntity<Product[]> getProductsByCategory(String category){
+        ResponseEntity<Product[]> responseEntity=restTemplate.getForEntity(productUrl+"/category/"+category,Product[].class);
+        return responseEntity;
+    }
 }

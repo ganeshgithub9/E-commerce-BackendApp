@@ -46,4 +46,9 @@ public class FakeStoreApiThirdPartyClientProductServiceAdapter implements ThirdP
     public ResponseEntity<Product> getProductById(Long id) {
         return fakeStoreApiProductServiceClient.getProductById(id);
     }
+
+    @Override
+    public ResponseEntity<Product[]> getProductsByCategory(String category) {
+        return fakeStoreApiProductServiceClient.getProductsByCategory(category);
+    }
 }

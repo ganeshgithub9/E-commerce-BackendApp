@@ -58,6 +58,10 @@ public class V1ProductController extends ProductController{
         return productService.getProducts();
     }
 
+//    public ResponseEntity<Product[]> getProductsByCategory(@RequestParam("category") String category){
+//      return productService.getProductsByCategory(category);
+//    }
+
     // Example of exception handling method-2.... controller level exceptions... can return custom java object
 
     @ExceptionHandler(ProductNotFoundException.class)

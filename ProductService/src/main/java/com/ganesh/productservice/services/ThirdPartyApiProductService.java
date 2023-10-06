@@ -68,4 +68,9 @@ public class ThirdPartyApiProductService implements ProductService{
     public ResponseEntity<Product[]> getProducts() {
         return thirdPartyClientProductServiceAdapter.getProducts();
     }
+
+    @Override
+    public ResponseEntity<Product[]> getProductsByCategory(String category) {
+        return thirdPartyClientProductServiceAdapter.getProductsByCategory(category);
+    }
 }
