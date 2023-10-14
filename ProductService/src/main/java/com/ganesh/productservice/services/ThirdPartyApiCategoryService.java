@@ -1,7 +1,7 @@
 package com.ganesh.productservice.services;
 
 import com.ganesh.productservice.DTO.Product;
-import com.ganesh.productservice.ThirdPartyClients.ProductService.ThirdPartyClientCategoryServiceAdapter;
+import com.ganesh.productservice.ThirdPartyClients.CategoryService.ThirdPartyClientCategoryServiceAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;

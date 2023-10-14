@@ -1,4 +1,4 @@
-package com.ganesh.productservice.ThirdPartyClients.ProductService;
+package com.ganesh.productservice.ThirdPartyClients.CategoryService;
 
 import com.ganesh.productservice.DTO.Product;
 import org.springframework.beans.factory.annotation.Autowired;
