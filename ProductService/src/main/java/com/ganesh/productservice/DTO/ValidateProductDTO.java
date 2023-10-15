@@ -20,6 +20,6 @@ public class ValidateProductDTO {
     @Min(value = 1,message = "Price should be greater than zero")
     Double price;
 
-    Integer rating;
+    Double rating;
     String category;
 }

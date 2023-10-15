@@ -13,7 +13,7 @@ public class ProductResponseDTO {
     UUID uuid;
     String name;
     String description;
-    Integer rating;
+    Double rating;
     Double price;
     String category;
     String currency;

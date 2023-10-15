@@ -42,7 +42,7 @@ public class CategoryController {
     @GetMapping("/{category_id}/products")
     ResponseEntity<List<ProductResponseDTO>> getProductsByCategory(@PathVariable UUID category_id) throws IDNotFoundException {
         List<ProductResponseDTO> list=service.getProductsByCategory(category_id);
-        System.out.println("category controller");
+        //System.out.println("category controller");
         return new ResponseEntity<>(list,HttpStatus.OK);
     }
 

@@ -2,6 +2,7 @@ package com.ganesh.productservice.services;
 
 
 import com.ganesh.productservice.DTO.CategoryResponseDTO;
+import com.ganesh.productservice.DTO.FindAllProductsDA0;
 import com.ganesh.productservice.DTO.ProductResponseDTO;
 import com.ganesh.productservice.DTO.ValidateCategoryDTO;
 import com.ganesh.productservice.Exceptions.IDNotFoundException;
@@ -28,7 +29,7 @@ public class SelfCategoryService{
         this.exception=exception;
     }
 
-    ProductResponseDTO toProductResponseDTO(Product product) throws IDNotFoundException {
+    ProductResponseDTO productToProductResponseDTO(Product product) throws IDNotFoundException {
         if(product==null)
             throw exception;
         ProductResponseDTO dto= ProductResponseDTO.builder().uuid(product.getUuid()).name(product.getName())
@@ -61,12 +62,20 @@ public class SelfCategoryService{
         Category category=categoryOptional.orElse(null);
         if(category==null)
             throw exception;
-        System.out.println("self category service");
-        List<Product> list=productRepository.findAllByCategory(category);
+        //System.out.println("self category service");
+        List<FindAllProductsDA0> list=productRepository.findAllByCategoryId(uuid);
+//        List<ProductResponseDTO> list1=new ArrayList<>();
+//        for(Product product:list)
+//            list1.add(toProductResponseDTO(product));
+//        return list1;
         List<ProductResponseDTO> list1=new ArrayList<>();
-        for(Product product:list)
-            list1.add(toProductResponseDTO(product));
-        return list1;
+        for(FindAllProductsDA0 da0:list)
+            list1.add(findAllProductsDA0ToProductResponseDTO(da0));
+        return  list1;
     }
-
+    ProductResponseDTO findAllProductsDA0ToProductResponseDTO(FindAllProductsDA0 da0){
+        ProductResponseDTO dto= ProductResponseDTO.builder().uuid(da0.getUuid()).name(da0.getName()).description(da0.getDescription())
+                .rating(da0.getRating()).price(da0.getPrice()).category(da0.getCategory()).currency(da0.getCurrency()).build();
+        return dto;
+    }
 }

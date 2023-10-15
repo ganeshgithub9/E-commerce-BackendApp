@@ -1,6 +1,7 @@
 package com.ganesh.productservice.services;
 
 
+import com.ganesh.productservice.DTO.FindAllProductsDA0;
 import com.ganesh.productservice.DTO.ProductResponseDTO;
 import com.ganesh.productservice.DTO.ValidatePriceDTO;
 import com.ganesh.productservice.DTO.ValidateProductDTO;
@@ -15,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -30,7 +32,7 @@ public class SelfProductService{
         this.categoryRepository=categoryRepository;
         this.exception=exception;
     }
-    ProductResponseDTO toProductResponseDTO(Product product) throws IDNotFoundException {
+    ProductResponseDTO productToProductResponseDTO(Product product) throws IDNotFoundException {
         if(product==null)
             throw exception;
         ProductResponseDTO dto= ProductResponseDTO.builder().uuid(product.getUuid()).name(product.getName())
@@ -43,7 +45,7 @@ public class SelfProductService{
         Product product=productOptional.orElse(null);
         if(product==null)
             throw exception;
-        ProductResponseDTO dto=toProductResponseDTO(product);
+        ProductResponseDTO dto=productToProductResponseDTO(product);
         return dto;
     }
 
@@ -58,14 +60,14 @@ public class SelfProductService{
         product.setPrice(price);
         price.setProduct(product);
         repository.save(product);
-        ProductResponseDTO dto=toProductResponseDTO(product);
+        ProductResponseDTO dto=productToProductResponseDTO(product);
         return dto;
     }
 
     public ProductResponseDTO assignCategoryToProduct(UUID product_id, UUID category_id) throws IDNotFoundException {
         Optional<Category> category=categoryRepository.findById(category_id);
         Optional<Product> product=repository.findById(product_id);
-        System.out.println("assignProductToCategory method start");
+        //System.out.println("assignProductToCategory method start");
         Category category1= category.orElse(null);
         Product product1=product.orElse(null);
         if(product1==null||category1==null)
@@ -74,7 +76,7 @@ public class SelfProductService{
         category1.getProducts().add(product1);
         //categoryRepository.save(category1);
         repository.save(product1);
-        ProductResponseDTO dto=toProductResponseDTO(product1);
+        ProductResponseDTO dto=productToProductResponseDTO(product1);
         return dto;
     }
 
@@ -84,12 +86,13 @@ public class SelfProductService{
         if(product==null)
             throw exception;
         product.setName(productDTO.getName());
-        product.setDescription(product.getDescription());
+        product.setDescription(productDTO.getDescription());
         product.setRating(productDTO.getRating());
         product.getPrice().setPrice(productDTO.getPrice());
-        product.getCategory().setName(productDTO.getName());
+        product.getPrice().setCurrency(productDTO.getCurrency());
+        product.getCategory().setName(productDTO.getCategory());
         repository.save(product);
-        ProductResponseDTO dto=toProductResponseDTO(product);
+        ProductResponseDTO dto=productToProductResponseDTO(product);
         return dto;
     }
 
@@ -98,16 +101,20 @@ public class SelfProductService{
         Product product=productOptional.orElse(null);
         if(product==null)
             throw exception;
-        ProductResponseDTO dto=toProductResponseDTO(product);
+        ProductResponseDTO dto=productToProductResponseDTO(product);
         repository.deleteById(id);
         return dto;
     }
 
     public List<ProductResponseDTO> getProducts() throws IDNotFoundException{
-        List<Product> products=repository.findAll();
+        //List<Product> products=repository.findAll();
+        List<FindAllProductsDA0> products=repository.findAllProducts();
         List<ProductResponseDTO> responseDTOS=new ArrayList<>();
-        for(Product p:products)
-            responseDTOS.add(toProductResponseDTO(p));
+        for(FindAllProductsDA0 p:products) {
+            ProductResponseDTO dto= ProductResponseDTO.builder().uuid(p.getUuid()).name(p.getName()).description(p.getDescription())
+                    .rating(p.getRating()).price(p.getPrice()).category(p.getCategory()).currency(p.getCurrency()).build();
+            responseDTOS.add(dto);
+        }
         return responseDTOS;
     }
 
