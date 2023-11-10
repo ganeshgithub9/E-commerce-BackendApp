@@ -1,24 +1,21 @@
 package com.ganesh.productservice.services;
 
-import com.ganesh.productservice.DTO.PriceDTO;
-import com.ganesh.productservice.DTO.Product;
-import com.ganesh.productservice.DTO.ProductDTO;
-import com.ganesh.productservice.DTO.ProductList;
+import com.ganesh.productservice.DTO.*;
 import com.ganesh.productservice.Exceptions.IDNotFoundException;
-import com.ganesh.productservice.Exceptions.ProductNotFoundException;
-import org.springframework.http.ResponseEntity;
+import com.ganesh.productservice.models.Product;
 
 import java.util.List;
 
 public interface ProductService {
-    ResponseEntity<Product> getProductById(Long id) throws ProductNotFoundException;
-    ResponseEntity<Product> createProduct(ProductDTO productDTO);
-    ResponseEntity<Product> updateProduct(ProductDTO productDTO,Long id);
-    ResponseEntity<Product> updatePrice(PriceDTO priceDTO, Long id) throws ProductNotFoundException;
+    Product getProductById(String id) throws NumberFormatException;
+    Product createProduct(ValidateProductDTO productDTO);
+    Product updateProduct(ValidateProductDTO productDTO,String id);
 
-    ResponseEntity<Product> deleteProductById(Long id) throws IDNotFoundException;
+    Product deleteProductById(String id);
 
-    /*ResponseEntity<ProductList>*/ ResponseEntity<Product[]> getProducts();
+     List<Product> getProducts();
 
-    ResponseEntity<Product[]> getProductsByCategory(String category);
+   // List<Product> getProductsByCategory(String category);
+
+    Product assignCategoryToProduct(String product_id, String category_id);
 }

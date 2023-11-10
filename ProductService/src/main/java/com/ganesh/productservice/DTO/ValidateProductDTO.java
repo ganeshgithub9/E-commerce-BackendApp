@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 public class ValidateProductDTO {
     @NotBlank(message = "Product name is mandatory")
-    String name;
+    String title;
     @NotBlank(message = "Product description is mandatory")
     String description;
 
@@ -20,6 +20,7 @@ public class ValidateProductDTO {
     @Min(value = 1,message = "Price should be greater than zero")
     Double price;
 
+    String image;
     Double rating;
     String category;
 }

@@ -1,6 +1,7 @@
 package com.ganesh.productservice.ThirdPartyClients.CategoryService;
 
-import com.ganesh.productservice.DTO.Product;
+import com.ganesh.productservice.DTO.ApiProduct;
+import com.ganesh.productservice.DTO.FakeStoreApiProduct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +24,8 @@ public class FakeStoreApiCategoryServiceClient implements ThirdPartyClientCatego
         ResponseEntity<String[]> responseEntity=template.getForEntity(categoriesUrl,String[].class);
         return responseEntity;
     }
-    public ResponseEntity<Product[]> getProductsByCategory(String category){
-        ResponseEntity<Product[]> responseEntity=template.getForEntity(categoryUrl,Product[].class,category);
+    public ResponseEntity<ApiProduct[]> getProductsByCategory(String category){
+        ResponseEntity<ApiProduct[]> responseEntity=template.getForEntity(categoryUrl, ApiProduct[].class,category);
         return responseEntity;
     }
 }

@@ -8,7 +8,6 @@ import java.util.UUID;
 
 @Setter
 @Getter
-@Builder
 public class CategoryResponseDTO {
     UUID uuid;
     String category;

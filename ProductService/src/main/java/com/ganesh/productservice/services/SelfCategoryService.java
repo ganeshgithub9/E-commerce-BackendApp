@@ -1,81 +1,72 @@
 package com.ganesh.productservice.services;
 
 
+import com.ganesh.productservice.interfaces.Converters;
+import com.ganesh.productservice.interfaces.ModelMapperConverters;
 import com.ganesh.productservice.DTO.CategoryResponseDTO;
-import com.ganesh.productservice.DTO.FindAllProductsDA0;
-import com.ganesh.productservice.DTO.ProductResponseDTO;
 import com.ganesh.productservice.DTO.ValidateCategoryDTO;
 import com.ganesh.productservice.Exceptions.IDNotFoundException;
 import com.ganesh.productservice.models.Category;
 import com.ganesh.productservice.models.Product;
 import com.ganesh.productservice.repositories.CategoryRepository;
 import com.ganesh.productservice.repositories.ProductRepository;
-import org.springframework.http.ResponseEntity;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service("selfCategoryService")
-public class SelfCategoryService{
+@Primary
+public class SelfCategoryService implements CategoryService {
     CategoryRepository repository;
     ProductRepository productRepository;
-    IDNotFoundException exception;
-    SelfCategoryService(CategoryRepository repository,ProductRepository productRepository, IDNotFoundException exception){
+    //IDNotFoundException exception;
+    Converters converters;
+    SelfCategoryService(CategoryRepository repository, ProductRepository productRepository, ModelMapperConverters converters){
         this.repository=repository;
         this.productRepository=productRepository;
-        this.exception=exception;
+        //this.exception=exception;
+        this.converters=converters;
     }
 
-    ProductResponseDTO productToProductResponseDTO(Product product) throws IDNotFoundException {
-        if(product==null)
-            throw exception;
-        ProductResponseDTO dto= ProductResponseDTO.builder().uuid(product.getUuid()).name(product.getName())
-                .description(product.getDescription()).rating(product.getRating()).price(product.getPrice().getPrice())
-                .currency(product.getPrice().getCurrency()).category(product.getCategory()!=null?product.getCategory().getName():null).build();
-        return dto;
-    }
     public Category createCategory(ValidateCategoryDTO dto){
         Category category=new Category();
         category.setName(dto.getName());
         repository.save(category);
         return category;
     }
-    public List<CategoryResponseDTO> getAllCategories() {
+    public List<Category> getAllCategories() {
         List<Category> list=repository.findAll();
-        List<CategoryResponseDTO> result=new ArrayList<>();
-        for(Category c:list)
-            result.add(toCategoryResponseDTO(c));
-        return result;
+//        List<CategoryResponseDTO> result=new ArrayList<>();
+//        for(Category c:list)
+//            result.add(toCategoryResponseDTO(c));
+        return list;
     }
 
-    private CategoryResponseDTO toCategoryResponseDTO(Category c) {
-        CategoryResponseDTO dto= CategoryResponseDTO.builder().uuid(c.getUuid()).category(c.getName()).build();
-        return dto;
-    }
+//    private CategoryResponseDTO toCategoryResponseDTO(Category c) {
+//        CategoryResponseDTO dto= CategoryResponseDTO.builder().uuid(c.getUuid()).category(c.getName()).build();
+//        return dto;
+//    }
 
 
-    public List<ProductResponseDTO> getProductsByCategory(UUID uuid) throws IDNotFoundException{
-        Optional<Category> categoryOptional=repository.findById(uuid);
+    public List<Product> getProductsByCategory(String uuid){
+        UUID id=UUID.fromString(uuid);
+        Optional<Category> categoryOptional=repository.findById(id);
         Category category=categoryOptional.orElse(null);
         if(category==null)
-            throw exception;
+            return null;
         //System.out.println("self category service");
-        List<FindAllProductsDA0> list=productRepository.findAllByCategoryId(uuid);
+        //List<FindAllProductsDA0> list=productRepository.findAllByCategory(id);
+        List<Product> list=productRepository.findAllByCategory(category);
 //        List<ProductResponseDTO> list1=new ArrayList<>();
 //        for(Product product:list)
 //            list1.add(toProductResponseDTO(product));
 //        return list1;
-        List<ProductResponseDTO> list1=new ArrayList<>();
-        for(FindAllProductsDA0 da0:list)
-            list1.add(findAllProductsDA0ToProductResponseDTO(da0));
-        return  list1;
-    }
-    ProductResponseDTO findAllProductsDA0ToProductResponseDTO(FindAllProductsDA0 da0){
-        ProductResponseDTO dto= ProductResponseDTO.builder().uuid(da0.getUuid()).name(da0.getName()).description(da0.getDescription())
-                .rating(da0.getRating()).price(da0.getPrice()).category(da0.getCategory()).currency(da0.getCurrency()).build();
-        return dto;
+//        List<ProductResponseDTO> list1=new ArrayList<>();
+//        for(FindAllProductsDA0 da0:list)
+//            list1.add(converters.findAllProductDaoToProductResponseDTO(da0));
+        return  list;
     }
 }

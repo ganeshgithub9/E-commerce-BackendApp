@@ -16,10 +16,15 @@ import java.util.ResourceBundle;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler(IDNotFoundException.class)
-    public ResponseEntity<String> throwIDNotFoundException(IDNotFoundException exception){
+    @ExceptionHandler({IDNotFoundException.class,NumberFormatException.class})
+    public ResponseEntity<String> throwException(Exception exception){
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
+
+//    @ExceptionHandler()
+//    public ResponseEntity<String> handleNumberFormatException(NumberFormatException exception){
+//        return new ResponseEntity<>("Invalid id",HttpStatus.OK);
+//    }
 
 //    @ExceptionHandler(MethodArgumentNotValidException.class)
 //    @ResponseStatus(HttpStatus.BAD_REQUEST)

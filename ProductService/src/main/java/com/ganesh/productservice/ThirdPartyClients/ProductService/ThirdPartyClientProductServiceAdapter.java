@@ -1,17 +1,17 @@
 package com.ganesh.productservice.ThirdPartyClients.ProductService;
 
-import com.ganesh.productservice.DTO.PriceDTO;
-import com.ganesh.productservice.DTO.Product;
-import com.ganesh.productservice.DTO.ProductDTO;
+import com.ganesh.productservice.DTO.*;
 import com.ganesh.productservice.Exceptions.ProductNotFoundException;
 import org.springframework.http.ResponseEntity;
 
+import java.util.List;
+
 public interface ThirdPartyClientProductServiceAdapter {
-    public ResponseEntity<Product> createProduct(ProductDTO productDTO);
-    public ResponseEntity<Product> updateProduct(ProductDTO productDTO,Long id);
-    public ResponseEntity<Product> updatePrice(PriceDTO priceDTO, Long id);
-    public ResponseEntity<Product> deleteProductById(Long id);
-    public ResponseEntity<Product[]> getProducts();
-    ResponseEntity<Product> getProductById(Long id);
-    ResponseEntity<Product[]> getProductsByCategory(String category);
+    public ResponseEntity<ApiProduct> createProduct(ValidateProductDTO productDTO);
+    public ResponseEntity<ApiProduct> updateProduct(ValidateProductDTO productDTO,Long id);
+    public ResponseEntity<ApiProduct> updatePrice(PriceDTO priceDTO, Long id);
+    public ResponseEntity<ApiProduct> deleteProductById(Long id);
+    public ResponseEntity<List<ApiProduct>> getProducts();
+    ResponseEntity<ApiProduct> getProductById(Long id);
+    ResponseEntity<List<ApiProduct>> getProductsByCategory(String category);
 }

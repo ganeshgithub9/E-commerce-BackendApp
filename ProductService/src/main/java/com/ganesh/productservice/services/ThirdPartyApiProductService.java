@@ -1,30 +1,32 @@
 package com.ganesh.productservice.services;
 
-import com.ganesh.productservice.DTO.PriceDTO;
-import com.ganesh.productservice.DTO.Product;
-import com.ganesh.productservice.DTO.ProductDTO;
-import com.ganesh.productservice.Exceptions.IDNotFoundException;
-import com.ganesh.productservice.Exceptions.ProductNotFoundException;
+import com.ganesh.productservice.interfaces.ModelMapperConverters;
+import com.ganesh.productservice.DTO.*;
 import com.ganesh.productservice.ThirdPartyClients.ProductService.ThirdPartyClientProductServiceAdapter;
+import com.ganesh.productservice.models.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service("thirdPartyApiProductService")
 public class ThirdPartyApiProductService implements ProductService{
     ThirdPartyClientProductServiceAdapter thirdPartyClientProductServiceAdapter;
-
+    ModelMapperConverters converters;
     @Autowired
-    ThirdPartyApiProductService(@Qualifier("fakeStoreApiThirdPartyClientProductServiceAdapter") ThirdPartyClientProductServiceAdapter thirdPartyClientProductServiceAdapter){
+    ThirdPartyApiProductService(@Qualifier("fakeStoreApiThirdPartyClientProductServiceAdapter") ThirdPartyClientProductServiceAdapter thirdPartyClientProductServiceAdapter
+            , ModelMapperConverters converters){
         this.thirdPartyClientProductServiceAdapter=thirdPartyClientProductServiceAdapter;
+        this.converters=converters;
     }
     @Override
-    public ResponseEntity<Product> getProductById(Long id) throws ProductNotFoundException {
+    public Product getProductById(String id) throws NumberFormatException {
+        //System.out.println("Third party api product service");
         //return thirdPartyClientProductServiceAdapter.getProductById(id);
-        ResponseEntity<Product> productResponseEntity=thirdPartyClientProductServiceAdapter.getProductById(id);
+        Long id1=Long.parseLong(id);
+        ApiProduct product=thirdPartyClientProductServiceAdapter.getProductById(id1).getBody();
 //        try {
 //            if (productResponseEntity.getBody() == null)
 //                throw new ProductNotFoundException("Product with id " + id + "not found");
@@ -32,45 +34,57 @@ public class ThirdPartyApiProductService implements ProductService{
 //        catch (ProductNotFoundException exception){
 //            System.out.println(exception.getMessage());
 //        }
-        if (productResponseEntity.getBody() == null)
-                throw new ProductNotFoundException("Product with id " + id + "not found");
-        return productResponseEntity;
+        //return converters.apiProductToProductResponseDTO(product);
+        return converters.apiProductToProduct(product);
     }
 
     @Override
-    public ResponseEntity<Product> createProduct(ProductDTO productDTO) {
-        return thirdPartyClientProductServiceAdapter.createProduct(productDTO);
+    public Product createProduct(ValidateProductDTO productDTO) {
+        ApiProduct product= thirdPartyClientProductServiceAdapter.createProduct(productDTO).getBody();
+        //return converters.apiProductToProductResponseDTO(product);
+        return converters.apiProductToProduct(product);
     }
 
     @Override
-    public ResponseEntity<Product> updateProduct(ProductDTO productDTO, Long id) {
-        return thirdPartyClientProductServiceAdapter.updateProduct(productDTO,id);
+    public Product updateProduct(ValidateProductDTO productDTO, String id) throws NumberFormatException{
+        Long id1=Long.parseLong(id);
+        ApiProduct product= thirdPartyClientProductServiceAdapter.updateProduct(productDTO,id1).getBody();
+        //return converters.apiProductToProductResponseDTO(product);
+        return converters.apiProductToProduct(product);
+    }
+
+
+    @Override
+    public Product deleteProductById(String id) {
+        Long id1=Long.parseLong(id);
+        ApiProduct product= thirdPartyClientProductServiceAdapter.deleteProductById(id1).getBody();
+        //return converters.apiProductToProductResponseDTO(product);
+        return converters.apiProductToProduct(product);
     }
 
     @Override
-    public ResponseEntity<Product> updatePrice(PriceDTO priceDTO, Long id) throws ProductNotFoundException{
-        ResponseEntity<Product> responseEntity= thirdPartyClientProductServiceAdapter.updatePrice(priceDTO,id);
-        if(responseEntity.getBody()==null)
-            throw new ProductNotFoundException("Product with id "+id+" not found");
-        Product product=responseEntity.getBody();product.setPrice(priceDTO.getPrice());
-        return new ResponseEntity<>(product, HttpStatus.OK);
+    public List<Product> getProducts() {
+        List<ApiProduct> products=thirdPartyClientProductServiceAdapter.getProducts().getBody();
+        return apiProductListToProductList(products);
     }
 
-    @Override
-    public ResponseEntity<Product> deleteProductById(Long id) throws IDNotFoundException {
-        ResponseEntity<Product> responseEntity= thirdPartyClientProductServiceAdapter.deleteProductById(id);
-        if(responseEntity.getBody()==null)
-            throw new IDNotFoundException("Product with id "+id+" not found");
-        return responseEntity;
-    }
+//    @Override
+//    public List<Product> getProductsByCategory(String category) {
+//        List<ApiProduct> products= thirdPartyClientProductServiceAdapter.getProductsByCategory(category).getBody();
+//        return apiProductListToProductList(products);
+//    }
 
     @Override
-    public ResponseEntity<Product[]> getProducts() {
-        return thirdPartyClientProductServiceAdapter.getProducts();
+    public Product assignCategoryToProduct(String product_id, String category_id) {
+        return null;
     }
 
-    @Override
-    public ResponseEntity<Product[]> getProductsByCategory(String category) {
-        return thirdPartyClientProductServiceAdapter.getProductsByCategory(category);
+    List<Product> apiProductListToProductList(List<ApiProduct> products){
+        if(products==null)
+            return null;
+        List<Product> list=new ArrayList<>();
+        for(ApiProduct p:products)
+            list.add(converters.apiProductToProduct(p));
+        return list;
     }
 }

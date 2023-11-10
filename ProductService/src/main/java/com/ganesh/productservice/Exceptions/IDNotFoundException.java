@@ -1,6 +1,7 @@
 package com.ganesh.productservice.Exceptions;
 
-import com.ganesh.productservice.DTO.Product;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 public class IDNotFoundException extends Exception{
     public IDNotFoundException(String msg){
